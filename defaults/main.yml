@@ -1,56 +1,55 @@
 ---
-
 # General
 
-# Enable the client installation. Set to false to uninstall the PMM2 client.
+# Enable the client installation. Set to false to uninstall the PMM client.
 # Type: Bool
-pmm2_client_install: True
+pmm_client_install: true
 
 # Enable the client; if set to `false` there will be just the installation.
 # Type: Bool
-pmm2_client_enabled: True
+pmm_client_enabled: true
 
-# Define the PMM2 Client version
+# Define the PMM Client version
 # Type: Int
-pmm2_client_version: 2.0.1
-pmm2_client_version_revision: 5
+pmm_client_version: 3.2.0
+pmm_client_version_revision: 7
 
 # Repository
 
 # Use the official Percona repository:
 # Type: Bool
-pmm2_client_use_official_repo: True
+pmm_client_use_official_repo: true
 
 # Define the repository version package
 # Type: Str
-pmm2_client_percona_release: latest
+pmm_client_percona_release: latest
 
 # Server
 
-# IP address and port of the PMM2 Server
+# IP address and port of the PMM Server
 # Type: Str
-pmm2_client_server_host: localhost
+pmm_client_server_host: localhost
 # Type: Int
-pmm2_client_server_port: 443
+pmm_client_server_port: 443
 
 # Type: Str
-pmm2_client_server_auth_username: admin
-pmm2_client_server_auth_password: admin
+pmm_client_server_auth_username: admin
+pmm_client_server_auth_password: admin
 
 # set ca_certificate to false. Set it to true if you have have a certificate signed
 # by an CA.
 # Type: Bool
-pmm2_client_insecure_tls: False
+pmm_client_insecure_tls: false
 
 # Force to set client name on initial setup
 # Type: Bool
-pmm2_client_force_setup: False
+pmm_client_force_setup: false
 
-pmm2_base_client_config: "--server-url=https://{{ pmm2_client_server_auth_username | quote }}:{{ pmm2_client_server_auth_password | quote }}@{{ pmm2_client_server_host | quote }}:{{ pmm2_client_server_port | quote }} {{ '--server-insecure-tls' if pmm2_client_insecure_tls else '' }} {{ '--force' if pmm2_client_force_setup else '' }}"
+pmm_base_client_config: "--server-url=https://{{ pmm_client_server_auth_username | quote }}:{{ pmm_client_server_auth_password | quote }}@{{ pmm_client_server_host | quote }}:{{ pmm_client_server_port | quote }} {{ '--server-insecure-tls' if pmm_client_insecure_tls else '' }} {{ '--force' if pmm_client_force_setup else '' }}"
 
 # Define add other settings to config
 # Type: Dict
-# pmm2_add_client_config:
+# pmm_add_client_config:
 #   flags:
 #     trace: ''
 #     json: ''
@@ -60,12 +59,12 @@ pmm2_base_client_config: "--server-url=https://{{ pmm2_client_server_auth_userna
 #     - 'generic'
 #     - '{{ ansible_fqdns }}'
 #
-pmm2_add_client_config: {} # pmm-admin config --help
+pmm_add_client_config: {} # pmm-admin config --help
 
 # Define services to be added (eg: mysql, proxysql,
 # mongodb, postgresql).
 # Type: Dict
-# pmm2_client_add_services:
+# pmm_client_add_services:
 #   mysql: # pmm-admin add mysql --help
 #     flags:
 #       json: ''
@@ -104,13 +103,12 @@ pmm2_add_client_config: {} # pmm-admin config --help
 #     args:
 #       - "{{ ansible_fqdn }}-postgresql"
 #       - 127.0.0.1:5432
-pmm2_client_add_services: {}
+pmm_client_add_services: {}
 
 # Define services to be removed (eg: mysql, proxysql,
 # mongodb, postgresql).
 # Type: Dict
-# pmm2_client_remove_services:
+# pmm_client_remove_services:
 #   mysql: "{{ ansible_fqdn }}-mysql"
 #   postgresql: "{{ ansible_fqdn }}-postgesql"
-pmm2_client_remove_services: {}
-
+pmm_client_remove_services: {}

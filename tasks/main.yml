@@ -14,29 +14,28 @@
 
 - include_tasks: percona-official-repo.yml
   when: >
-        pmm2_client_install and
-        pmm2_client_use_official_repo
+        pmm_client_install and
+        pmm_client_use_official_repo
 
 - include_tasks: install.yml
-  when: pmm2_client_install
+  when: pmm_client_install
 
 - include_tasks: server-config.yml
   when: >
-        pmm2_client_install and
-        pmm2_client_enabled
+        pmm_client_install and
+        pmm_client_enabled
 
 - include_tasks: add-client-services.yml
-  loop: "{{ pmm2_client_add_services | dict2items }}"
+  loop: "{{ pmm_client_add_services | dict2items }}"
   when: >
-        pmm2_client_install and
-        pmm2_client_enabled
+        pmm_client_install and
+        pmm_client_enabled
 
 - include_tasks: remove-client-services.yml
-  loop: "{{ pmm2_client_remove_services | dict2items }}"
+  loop: "{{ pmm_client_remove_services | dict2items }}"
   when: >
-        pmm2_client_install and
-        pmm2_client_enabled
+        pmm_client_install and
+        pmm_client_enabled
 
 - include_tasks: uninstall.yml
-  when: not pmm2_client_install
-
+  when: not pmm_client_install

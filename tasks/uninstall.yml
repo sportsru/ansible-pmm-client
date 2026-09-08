@@ -1,8 +1,8 @@
 ---
 
-- name: Uninstall PMM2 Client
+- name: Uninstall PMM Client
   package:
-    name: "{{ pmm2_client_pkgs }}"
+    name: "{{ pmm_client_pkgs }}"
     state: absent
   delay: 10
   register: result
