@@ -68,8 +68,19 @@
         (not pmm_client_use_official_repo) and
         (ansible_os_family == "RedHat")
 
+- name: Check installed PMM Client package (after install) - Debian based distributions
+  command: "dpkg-query -W -f='${Status}' {{ pmm_client_pkg_name }}"
+  register: pmm_client_dpkg_query_after
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: ansible_os_family == "Debian"
+
+# Only an installed package can be held (in check mode a package to be installed is not there yet)
 - name: Hold PMM Client package - Debian based distributions
   dpkg_selections:
     name: "{{ pmm_client_pkg_name }}"
     selection: "{{ 'hold' if pmm_client_hold | bool else 'install' }}"
-  when: ansible_os_family == "Debian"
+  when: >
+        ansible_os_family == "Debian" and
+        pmm_client_dpkg_query_after.stdout.endswith(' installed')
