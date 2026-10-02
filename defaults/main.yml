@@ -25,6 +25,11 @@ pmm_client_version_revision: 1
 # Type: Bool
 pmm_client_hold: true
 
+# Allow installing pmm_client_version when a newer version is installed (Debian based
+# distributions), e.g. to bring the client back to the PMM Server version.
+# Type: Bool
+pmm_client_allow_downgrade: true
+
 # Hide credentials (PMM Server and service passwords) in the task output.
 # Set to false to debug failing pmm-admin commands.
 # Type: Bool

@@ -22,6 +22,7 @@
   apt:
     name: "{{ pmm_client_pkgs }}"
     state: present
+    allow_downgrade: "{{ pmm_client_allow_downgrade | bool }}"
     update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
   delay: 10
   register: result
@@ -48,6 +49,7 @@
   apt:
     deb: "{{ pmm_client_pkg }}"
     state: present
+    allow_downgrade: "{{ pmm_client_allow_downgrade | bool }}"
   delay: 10
   register: result
   retries: 3
