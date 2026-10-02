@@ -10,15 +10,41 @@ pmm_client_install: true
 pmm_client_enabled: true
 
 # Define the PMM Client version
+# Type: Str
+pmm_client_version: 3.8.1
 # Type: Int
-pmm_client_version: 3.2.0
-pmm_client_version_revision: 7
+pmm_client_version_revision: 1
+
+# Version of the PMM Server the client connects to. When defined, the role fails
+# if pmm_client_version is newer (the client must not be newer than the server).
+# Type: Str
+# pmm_client_server_version: 3.8.1
+
+# Hold the pmm-client package (Debian based distributions), so that `apt upgrade`
+# does not move it away from pmm_client_version. Set to false to unhold.
+# Type: Bool
+pmm_client_hold: true
+
+# Hide credentials (PMM Server and service passwords) in the task output.
+# Set to false to debug failing pmm-admin commands.
+# Type: Bool
+pmm_client_no_log: true
 
 # Repository
 
 # Use the official Percona repository:
 # Type: Bool
 pmm_client_use_official_repo: true
+
+# APT repository (Debian based distributions): <url>/<name>/apt, signed by the Percona key
+# stored in the keyring file. The major version of pmm_client_version selects pmm<major>-client.
+# Type: Str
+pmm_client_repository_url: http://repo.percona.com
+pmm_client_repository_name: "pmm{{ (pmm_client_version | string).split('.')[0] }}-client"
+pmm_client_repository_keyring: /usr/share/keyrings/percona-keyring.gpg
+pmm_client_repository_key_id: 9334A25F8507EFA5
+# Type: Bool
+pmm_client_repository_keyring_manage: true
 
 # Define the repository version package
 # Type: Str

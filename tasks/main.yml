@@ -12,6 +12,14 @@
       paths:
         - vars
 
+- name: Check PMM Client version against PMM Server version
+  fail:
+    msg: "pmm_client_version {{ pmm_client_version }} is newer than the PMM Server ({{ pmm_client_server_version }}), the client must not be newer than the server"
+  when: >
+        pmm_client_install and
+        pmm_client_server_version is defined and
+        pmm_client_version | string is version(pmm_client_server_version | string, '>')
+
 - include_tasks: percona-official-repo.yml
   when: >
         pmm_client_install and

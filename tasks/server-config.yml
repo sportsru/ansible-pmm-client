@@ -26,6 +26,7 @@
 - name: 'Set variable pmm config'
   set_fact:
     pmm_client_config: "{{ pmm_base_client_config + ' ' + pmm_extended_client_config }}"
+  no_log: "{{ pmm_client_no_log | bool }}"
 
 - name: Check if PMM Client is configured
   command: pmm-admin list
@@ -35,6 +36,7 @@
 
 - name: Configure PMM Client
   command: pmm-admin config {{ pmm_client_config }}
+  no_log: "{{ pmm_client_no_log | bool }}"
   when: >
         (not ansible_check_mode) and
         (pmm_admin_list.stderr.find("pmm-agent is running, but not set up") != -1)

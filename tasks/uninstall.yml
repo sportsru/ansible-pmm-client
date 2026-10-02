@@ -1,8 +1,25 @@
 ---
 
+- name: Check installed PMM Client package - Debian based distributions
+  command: "dpkg-query -W -f='${Status}' {{ pmm_client_pkg_name }}"
+  register: pmm_client_dpkg_query
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: ansible_os_family == "Debian"
+
+- name: Unhold PMM Client package - Debian based distributions
+  dpkg_selections:
+    name: "{{ pmm_client_pkg_name }}"
+    selection: install
+  when: >
+        ansible_os_family == "Debian" and
+        pmm_client_dpkg_query.stdout.endswith(' installed')
+
+# By name, so that any installed version is removed (not only pmm_client_version)
 - name: Uninstall PMM Client
   package:
-    name: "{{ pmm_client_pkgs }}"
+    name: "{{ pmm_client_pkg_name }}"
     state: absent
   delay: 10
   register: result

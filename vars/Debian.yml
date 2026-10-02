@@ -1,8 +1,13 @@
 ---
+# Name and full version of the package:
+# Type: Str
+pmm_client_pkg_name: pmm-client
+pmm_client_pkg_version: "{{ pmm_client_version }}-{{ pmm_client_version_revision }}.{{ ansible_distribution_release | lower }}"
+
 # List of packages:
 # Type: List
 pmm_client_pkgs:
-  - pmm-client={{ pmm_client_version }}-{{ pmm_client_version_revision }}.{{ ansible_distribution_release | lower }}
+  - "{{ pmm_client_pkg_name }}={{ pmm_client_pkg_version }}"
 
 # URLs to configure Percona repositories:
 # Type: Str
@@ -11,4 +16,4 @@ pmm_client_repo: "https://repo.percona.com/apt/percona-release_{{ pmm_client_per
 # URLs for direct download of the Percona PMM Client.
 # To use a direct download please set pmm_client_use_official_repo to false.
 # Type: Str
-pmm_client_pkg: "https://downloads.percona.com/downloads/pmm3/{{ pmm_client_version }}/binary/debian/{{ ansible_distribution_release }}/x86_64/pmm-client_{{ pmm_client_version }}-{{ pmm_client_version_revision }}.{{ ansible_distribution_release }}_amd64.deb"
+pmm_client_pkg: "https://downloads.percona.com/downloads/pmm{{ (pmm_client_version | string).split('.')[0] }}/{{ pmm_client_version }}/binary/debian/{{ ansible_distribution_release }}/x86_64/pmm-client_{{ pmm_client_pkg_version }}_amd64.deb"

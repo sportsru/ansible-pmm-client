@@ -12,4 +12,4 @@
   command: "pmm-admin remove {{ item.key }} {{ item.value }}"
   when: >
         ( not ansible_check_mode ) and
-        ( pmm_admin_list_add.rc == 0 )
+        ( pmm_admin_list_remove.rc == 0 )
