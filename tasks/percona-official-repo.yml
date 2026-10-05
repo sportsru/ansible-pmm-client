@@ -1,8 +1,22 @@
 ---
+- name: Ensure Percona APT repository key
+  apt_key:
+    id: "{{ pmm_client_repository_key_id }}"
+    keyserver: "{{ apt_key_keyserver | default('keyserver.ubuntu.com') }}"
+    keyring: "{{ pmm_client_repository_keyring }}"
+    state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: >
+        ansible_os_family == "Debian" and
+        pmm_client_repository_keyring_manage | bool
+
 - name: Ensure Percona APT repository
   apt_repository:
-    repo: 'deb [signed-by=/usr/share/keyrings/percona-keyring.gpg] http://repo.percona.com/pmm3-client/apt {{ ansible_distribution_release }} main'
-    filename: percona-pmm3-client-release
+    repo: "deb [signed-by={{ pmm_client_repository_keyring }}] {{ pmm_client_repository_url }}/{{ pmm_client_repository_name }}/apt {{ ansible_distribution_release }} main"
+    filename: "percona-{{ pmm_client_repository_name }}-release"
   delay: 10
   register: result
   retries: 3

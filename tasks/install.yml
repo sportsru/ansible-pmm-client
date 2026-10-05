@@ -1,9 +1,28 @@
 ---
 
+- name: Check installed PMM Client package - Debian based distributions
+  command: "dpkg-query -W -f='${Status}|${Version}' {{ pmm_client_pkg_name }}"
+  register: pmm_client_dpkg_query
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: ansible_os_family == "Debian"
+
+# A held package can not be changed by apt, so unhold it when its version has to change
+- name: Unhold PMM Client package before changing its version - Debian based distributions
+  dpkg_selections:
+    name: "{{ pmm_client_pkg_name }}"
+    selection: install
+  when: >
+        ansible_os_family == "Debian" and
+        pmm_client_dpkg_query.stdout.split('|')[0].endswith(' installed') and
+        pmm_client_dpkg_query.stdout.split('|')[-1] != pmm_client_pkg_version
+
 - name: Install PMM Client packages from official repo - Debian based distributions
   apt:
     name: "{{ pmm_client_pkgs }}"
     state: present
+    allow_downgrade: "{{ pmm_client_allow_downgrade | bool }}"
     update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
   delay: 10
   register: result
@@ -30,6 +49,7 @@
   apt:
     deb: "{{ pmm_client_pkg }}"
     state: present
+    allow_downgrade: "{{ pmm_client_allow_downgrade | bool }}"
   delay: 10
   register: result
   retries: 3
@@ -49,3 +69,20 @@
   when: >
         (not pmm_client_use_official_repo) and
         (ansible_os_family == "RedHat")
+
+- name: Check installed PMM Client package (after install) - Debian based distributions
+  command: "dpkg-query -W -f='${Status}' {{ pmm_client_pkg_name }}"
+  register: pmm_client_dpkg_query_after
+  changed_when: false
+  failed_when: false
+  check_mode: false
+  when: ansible_os_family == "Debian"
+
+# Only an installed package can be held (in check mode a package to be installed is not there yet)
+- name: Hold PMM Client package - Debian based distributions
+  dpkg_selections:
+    name: "{{ pmm_client_pkg_name }}"
+    selection: "{{ 'hold' if pmm_client_hold | bool else 'install' }}"
+  when: >
+        ansible_os_family == "Debian" and
+        pmm_client_dpkg_query_after.stdout.endswith(' installed')

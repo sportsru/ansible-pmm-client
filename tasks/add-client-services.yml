@@ -22,6 +22,7 @@
       {%-   endfor -%}
       {%- endif -%}
       {{- _pmm_service_flags | list }}
+  no_log: "{{ pmm_client_no_log | bool }}"
 
 - name: "Set variable pmm service args of {{ item.key }}"
   set_fact:
@@ -30,9 +31,11 @@
 - name: "Set variable pmm service full of {{ item.key }}"
   set_fact:
     pmm_service_full: "{{ pmm_service_flags | join(' ') + ' ' + pmm_service_args }}"
+  no_log: "{{ pmm_client_no_log | bool }}"
 
 - name: "Adding services {{ item.key }} to monitoring"
   command: "pmm-admin add {{ item.key }} {{ pmm_service_full }}"
+  no_log: "{{ pmm_client_no_log | bool }}"
   when: >
         ( not ansible_check_mode ) and
         ( pmm_admin_list_add.rc == 1 )
